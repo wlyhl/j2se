@@ -28,7 +28,7 @@ public class TargetImg {
     }
 
     public Position foundIn(RGBCache img) {
-        for (int y = 700, xend = img.getWidth() - width; y < 1300; y++)
+        for (int y = 700, xend = img.img.getWidth() - width; y < 1300; y++)
             for (int x = 0; x < xend; x++) {//左上角
                 if (like(img, x, y)) {
                     img.setBackGround(x, y, x + width, y + height);

@@ -1,6 +1,7 @@
 package org.jd.wx.jump;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -52,5 +53,18 @@ public class ImageUtil {
                 e.printStackTrace();
             }
         }).start();
+    }
+    public static void writeTo(RGBCache r,String name){
+        Graphics g = r.img.getGraphics();
+        g.setColor(Color.BLACK);
+        for(int x=0;x<r.img.getWidth();x++)
+            for(int y=0;y<r.img.getHeight();y++)
+                if(r.isBG(x,y))
+                    g.drawLine(x,y,x,y);
+        try {
+            ImageIO.write(r.img, "png", new File(name));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

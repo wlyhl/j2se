@@ -29,9 +29,9 @@ public class Shell {
     public InputStream exe(String shell, String ... waitFor){
         return exeAndWait(shell,p.getInputStream(),waitFor);
     }
-    public InputStream exeAndWaitError(String shell,String ... waitFor){
-        return exeAndWait(shell,p.getErrorStream(),waitFor);
-    }
+//    public InputStream exeAndWaitError(String shell,String ... waitFor){
+//        return exeAndWait(shell,p.getErrorStream(),waitFor);
+//    }
     private InputStream exeAndWait(String shell, InputStream in, String ... waitFor) {
         Wait wait=new Wait(p.getInputStream());
         wait.addWaitString(shell);

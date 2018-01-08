@@ -1,12 +1,14 @@
 package org.jd.wx.jump;
 
 
+import java.awt.image.BufferedImage;
+
 public class RGBCache {
     boolean isBanckGround[][];
-    java.awt.image.BufferedImage img;
+    public final BufferedImage img;
     private int[][] rgb;
 
-    public RGBCache(java.awt.image.BufferedImage img) {
+    public RGBCache(BufferedImage img) {
         super();
         this.img = img;
         rgb = new int[img.getWidth()][img.getHeight()];
@@ -18,21 +20,15 @@ public class RGBCache {
         return v == 0 ? rgb[x][y] = img.getRGB(x, y) : v;
     }
 
-    public int getWidth() {
-        return img.getWidth();
-    }
-
-    public int getHeight() {
-        return img.getHeight();
-    }
-
     public void setBackGround(int x, int y) {
         isBanckGround[x][y] = true;
     }
     public void setBackGround(int x, int y,int x2,int y2) {
+        final int y_=y;
         do{
             while(y<=y2)
                 setBackGround(x,y++);
+            y=y_;
         }while(++x<=x2);
     }
 

@@ -13,10 +13,9 @@
     <modules>
         <module>wx-jump</module>
         <module>port-scanner</module>
+        <module>util</module>
     </modules>
-
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
