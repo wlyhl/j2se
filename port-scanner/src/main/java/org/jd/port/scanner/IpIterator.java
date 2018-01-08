@@ -6,7 +6,7 @@ import java.util.Arrays;
  * Created by cuijiandong on 2018/1/5.
  */
 public class IpIterator {
-    public static void iterate(String from,String to,IpIterateCallback callback){
+    public static void iterate(String from, String to, IpIterateCallback callback){
         int[] f=ip2int(from);
         int[] fSource= Arrays.copyOf(f,f.length);
         int[] t=ip2int(to);

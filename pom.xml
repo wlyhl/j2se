@@ -11,8 +11,8 @@
     <name>可执行jar</name>
     <description>可执行的jar</description>
     <modules>
-        <module>portScanner</module>
-        <module>shell</module>
+        <module>wx-jump</module>
+        <module>port-scanner</module>
     </modules>
 
     <build>

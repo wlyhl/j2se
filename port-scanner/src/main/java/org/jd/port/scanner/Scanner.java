@@ -2,7 +2,6 @@ package org.jd.port.scanner;
 
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.concurrent.Callable;
 
 /**
  * Created by cuijiandong on 2018/1/5.
