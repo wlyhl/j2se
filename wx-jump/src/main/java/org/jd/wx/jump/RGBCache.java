@@ -3,7 +3,10 @@ package org.jd.wx.jump;
 
 import java.awt.image.BufferedImage;
 
-public class RGBCache {
+/**
+ * 缓存图片颜色
+ */
+public class RGBCache{
     boolean isBanckGround[][];
     public final BufferedImage img;
     private int[][] rgb;

@@ -1,4 +1,4 @@
-package org.jd.wx.jump;
+package org.jd.image.find;
 
 public class Position {
 	public int x,y;
