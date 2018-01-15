@@ -24,8 +24,8 @@ public class AverageSample implements Sample {
     @Override
     public List<Position> sample(int xMax, int yMax) {
         List<Position> pos = new ArrayList<>((xMax+1)*(yMax+1)/skip/skip);
-        for(int x=0;x<=xMax;x=skip)
-            for(int y=0;y<=yMax;y+=skip)
+        for(int y=0;y<=yMax;y+=skip)
+            for(int x=0;x<=xMax;x+=skip)
                 pos.add(new Position(x,y));
         return pos;
     }
