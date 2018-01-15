@@ -31,7 +31,7 @@ public class Main {
 		for(Double i=-50D;i<=50;i+=1){
 			Double p = Jmath.normalDistribution(i/10, 0, 0.2)*20;
 			while(p-->0)
-				nd.add(Double.valueOf(i*1.5).intValue());
+				nd.add(Double.valueOf(i*2).intValue());
 		}
 
 		Shell shell=new Shell("cmd");
@@ -42,7 +42,13 @@ public class Main {
 			ImageUtil.writeTo(img,f.getAbsolutePath()+"\\"+i+".png");
 			System.out.println("截屏耗时"+(new Date().getTime()-l));
 
-			double farFrom = farFrom(img);
+			double farFrom ;
+			try{
+                farFrom = farFrom(img);
+            }catch (Exception e){
+			    e.printStackTrace();
+			    continue;
+            }
 			double delay=715f/521f*farFrom;
 			String s="距离"+toInt(farFrom)+"延时"+toInt(delay);
 			System.out.println(s);
@@ -56,6 +62,7 @@ public class Main {
 			shell.exe(swipe);
 			System.out.println("本次耗时"+(new Date().getTime()-l));
 			x=3000+Math.abs(nd.get(Jmath.randomInt(0,nd.size()-1))*30);
+			x=4000;
 			System.out.println("延时"+x);
 			Thread.sleep(x);
 		}
