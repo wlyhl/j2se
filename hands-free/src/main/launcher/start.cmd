@@ -1,0 +1,1 @@
+start javaw -jar hands-free.jar ./hands-free.conf
