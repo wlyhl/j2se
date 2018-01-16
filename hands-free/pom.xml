@@ -23,7 +23,7 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>hand-free</finalName>
+        <finalName>hands-free</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

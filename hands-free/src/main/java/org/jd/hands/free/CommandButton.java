@@ -4,10 +4,7 @@ import javafx.scene.control.Button;
 import org.jd.util.FileUtil;
 
 import javax.imageio.ImageIO;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -16,11 +13,13 @@ import java.util.ArrayList;
 public class CommandButton extends Button {
 
     public static final String MOUSE_MOVE = "mouseMove";
+    public static final String MOUSE_BACK = "mouseBack";
     public static final String MOUSE_CLICK = "mouseClick";
     public static final String PASTE = "paste";
     public static final String DELAY = "delay";
     public static final String EXE = "exe";
     public static final String TYPE = "type";
+    //当前按钮按下后需要执行的一串命令
     public final ArrayList<String[]> cmds = new ArrayList<>();
     private static final Robot r = new Robot();
 
@@ -36,18 +35,18 @@ public class CommandButton extends Button {
                             else if (s.length == 4) {
                                 InputStream in = FileUtil.find(s[1]);
                                 if (in == null)
-                                    System.out.println("目标图片未找到" + s[1]);
+                                    System.out.println("目标图片不存在" + s[1]);
                                 r.mouseMove(ImageIO.read(in), Integer.parseInt(s[2]), Integer.parseInt(s[3]));
                             }
+                            break;
+                        case MOUSE_BACK:
+                            r.mouseBack(Integer.parseInt(s[1]));
                             break;
                         case MOUSE_CLICK:
                             r.mouseClick();
                             break;
                         case PASTE:
-                            StringBuilder sb = new StringBuilder();
-                            for (int i = 1; i < s.length; i++)
-                                sb.append(s[i]).append(" ");
-                            r.paste(sb.toString());
+                            r.paste(s[1]);
                             break;
                         case DELAY:
                             r.delay(Integer.valueOf(s[1]));
@@ -68,9 +67,8 @@ public class CommandButton extends Button {
         });
     }
 
-    public static CommandButton[] loadFrom(InputStream in) {
-
-        BufferedReader r = new BufferedReader(new InputStreamReader(in));
+    public static CommandButton[] loadFrom(InputStream in) throws UnsupportedEncodingException {
+        BufferedReader r = new BufferedReader(new InputStreamReader(in,"utf-8"));
         ArrayList<CommandButton> list = new ArrayList<>();
         CommandButton that = null;
         try {
@@ -79,25 +77,26 @@ public class CommandButton extends Button {
                 if (s.startsWith("//") || "".equals(s.trim()))
                     continue;
                 if (note) {//在多行注释中
-                    note = !s.startsWith("*/");//注释未结束
+                    note = !"*/".equals(s);//注释未结束
                     continue;
                 } else {
                     if (note = s.startsWith("/*"))
                         continue;
                 }
 
-                if (s.startsWith("  ")) {
+                if (s.startsWith("  ")) {//配置按钮点击后的流程
                     s = s.substring(2);
-                    if (s.startsWith(PASTE)) {
-                        String[] cmd = {PASTE, s.substring(PASTE.length() + 1)};
-                        that.cmds.add(cmd);
-                    } else if (s.startsWith(EXE)) {//exe chrome.exe http://baidu.com
-                        String[] cmd = {EXE, s.substring(EXE.length() + 1)};
-                        that.cmds.add(cmd);
-                    } else {
-                        that.cmds.add(s.split(" "));
+                    int spaceIndex=s.indexOf(" ");
+                    String cmd = spaceIndex>-1?s.substring(0,spaceIndex ):s;
+                    switch (cmd) {
+                        case PASTE:
+                        case EXE:
+                            that.cmds.add(oneParam(cmd, s));
+                            break;
+                        default:
+                            that.cmds.add(s.split(" "));
                     }
-                } else {
+                } else {//增加一个新按钮
                     list.add(that = new CommandButton(s));
                 }
             }
@@ -105,5 +104,10 @@ public class CommandButton extends Button {
             e.printStackTrace();
         }
         return list.toArray(new CommandButton[list.size()]);
+    }
+
+    private static String[] oneParam(String cmd, String conf) {
+        String[] result = {cmd, conf.substring(cmd.length() + 1)};
+        return result;
     }
 }
