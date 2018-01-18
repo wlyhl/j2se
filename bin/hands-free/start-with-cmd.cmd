@@ -1,0 +1,1 @@
+start java -jar hands-free.jar ./hands-free.conf

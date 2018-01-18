@@ -11,22 +11,33 @@ import java.util.List;
  */
 public class AverageSample implements Sample {
 
-    private int skip;
+    private int n;
 
     /**
      * 平均取样
-     * @param skip 取样时跳过的像素个数 1 表示隔1个取一次样
+     *
+     * @param n 每n个点取一次样
      */
-    public AverageSample(int skip) {
-        this.skip = skip+1;
+    public AverageSample(int n) {
+        this.n = n;
+    }
+
+    /**
+     *
+     * @param count 大概取样总数，
+     * @param width 图片宽度
+     * @param height 图片高度
+     */
+    public AverageSample(int count, double width, double height) {
+        this((int) Math.round(Math.sqrt(width * height / count)));
     }
 
     @Override
     public List<Position> sample(int xMax, int yMax) {
-        List<Position> pos = new ArrayList<>((xMax+1)*(yMax+1)/skip/skip);
-        for(int y=0;y<=yMax;y+=skip)
-            for(int x=0;x<=xMax;x+=skip)
-                pos.add(new Position(x,y));
+        List<Position> pos = new ArrayList<>((xMax + 1) * (yMax + 1) / n / n);
+        for (int y = 0; y <= yMax; y += n)
+            for (int x = 0; x <= xMax; x += n)
+                pos.add(new Position(x, y));
         return pos;
     }
 }

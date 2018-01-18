@@ -4,14 +4,12 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.jd.util.FileUtil;
+import org.jd.util.Robot;
 
-import javax.imageio.ImageIO;
-import java.io.InputStream;
 import java.util.List;
 
 

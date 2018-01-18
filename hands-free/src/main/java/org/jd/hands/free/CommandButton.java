@@ -1,17 +1,25 @@
 package org.jd.hands.free;
 
 import javafx.scene.control.Button;
+import org.jd.image.find.Position;
+import org.jd.image.find.TargetImg;
+import org.jd.image.find.sample.AverageSample;
 import org.jd.util.FileUtil;
+import org.jd.util.Logger;
+import org.jd.util.Robot;
+import org.jd.util.Timer;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by cuijiandong on 2018/1/11.
  */
 public class CommandButton extends Button {
-
+    static final Logger log = new Logger(System.out);
     public static final String MOUSE_MOVE = "mouseMove";
     public static final String MOUSE_BACK = "mouseBack";
     public static final String MOUSE_CLICK = "mouseClick";
@@ -19,6 +27,7 @@ public class CommandButton extends Button {
     public static final String DELAY = "delay";
     public static final String EXE = "exe";
     public static final String TYPE = "type";
+    public static final String TYPE_WITH = "typeWith";
     //当前按钮按下后需要执行的一串命令
     public final ArrayList<String[]> cmds = new ArrayList<>();
     private static final Robot r = new Robot();
@@ -26,17 +35,38 @@ public class CommandButton extends Button {
     public CommandButton(String text) {
         super(text);
         setOnMouseClicked((event) -> {
+            log.log("【",text,"】");
             try {
-                for (String[] s : cmds) {
+               loop: for (String[] s : cmds) {
+                    log.log("-->",Arrays.toString(s));
                     switch (s[0]) {
                         case MOUSE_MOVE:
-                            if (s.length == 3)
+                            if (s.length == 3) //mouseMove 100 100
                                 r.mouseMove(Integer.valueOf(s[1]), Integer.valueOf(s[2]));
-                            else if (s.length == 4) {
+                            else {//找到图片坐标并移动鼠标至图片附近
                                 InputStream in = FileUtil.find(s[1]);
-                                if (in == null)
-                                    System.out.println("目标图片不存在" + s[1]);
-                                r.mouseMove(ImageIO.read(in), Integer.parseInt(s[2]), Integer.parseInt(s[3]));
+                                log.log("加载目标图片=== ", s[1]);
+                                if (in == null) {
+                                    log.log("加载目标图片失败，未找到目标图片！");
+                                    break loop;
+                                }
+                                BufferedImage img = ImageIO.read(in);
+                                TargetImg targetImg = new TargetImg(img, 15, new AverageSample(30,img.getWidth(),img.getHeight()));
+                                Position pos = null;
+                                Timer t=new Timer();
+                                log.log("在屏幕上搜索目标图片");
+                                for (int i = 0; i < 5 && (pos = targetImg.findIn(r.screencap())) == null; i++) {
+                                    log.log("第",i,"次搜索未找到，1.5秒后继续搜索。本次耗时",t.cost());
+                                    r.delay(1500);
+                                }
+                                if (pos != null) {
+                                    log.log("找到目标图片，坐标",pos,"耗时"+t.cost());
+                                    if(s.length==4){//mouseMove d:\img\0.png +10 -20
+                                        pos.x += Integer.parseInt(s[2]);
+                                        pos.y += Integer.parseInt(s[3]);
+                                    }
+                                    r.mouseMove(pos.x, pos.y);
+                                }else break loop;
                             }
                             break;
                         case MOUSE_BACK:
@@ -44,6 +74,9 @@ public class CommandButton extends Button {
                             break;
                         case MOUSE_CLICK:
                             r.mouseClick();
+                            if(s.length == 2)
+                                for(int i=Integer.valueOf(s[1]);i>1;i--)
+                                    r.mouseClick();
                             break;
                         case PASTE:
                             r.paste(s[1]);
@@ -55,10 +88,15 @@ public class CommandButton extends Button {
                             Runtime.getRuntime().exec(s[1]);
                             break;
                         case TYPE:
-                            r.type(s[1]);
+                            for(int i=1;i<s.length;i++)
+                                r.type(s[i]);
+                            break;
+                        case TYPE_WITH:
+                            r.typeWith(s[1],s[2]);
                             break;
                         default:
-                            System.out.println("命令无效" + s[0]);
+                            log.log("命令无效" ,s[0]);
+                            break loop;
                     }
                 }
             } catch (Exception e) {
@@ -68,7 +106,7 @@ public class CommandButton extends Button {
     }
 
     public static CommandButton[] loadFrom(InputStream in) throws UnsupportedEncodingException {
-        BufferedReader r = new BufferedReader(new InputStreamReader(in,"utf-8"));
+        BufferedReader r = new BufferedReader(new InputStreamReader(in, "utf-8"));
         ArrayList<CommandButton> list = new ArrayList<>();
         CommandButton that = null;
         try {
@@ -86,8 +124,8 @@ public class CommandButton extends Button {
 
                 if (s.startsWith("  ")) {//配置按钮点击后的流程
                     s = s.substring(2);
-                    int spaceIndex=s.indexOf(" ");
-                    String cmd = spaceIndex>-1?s.substring(0,spaceIndex ):s;
+                    int spaceIndex = s.indexOf(" ");
+                    String cmd = spaceIndex > -1 ? s.substring(0, spaceIndex) : s;
                     switch (cmd) {
                         case PASTE:
                         case EXE:

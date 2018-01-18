@@ -10,6 +10,7 @@ public class Jmath {
 
     /**
      * 随机整数，不包含 min，max
+     *
      * @param min 下限
      * @param max 上限
      * @return
@@ -22,6 +23,7 @@ public class Jmath {
 
     /**
      * 正态分布
+     *
      * @param x 自变量
      * @param u 期望，均数，位置参数，对称轴
      * @param o 离散程度
@@ -30,5 +32,9 @@ public class Jmath {
     public static double normalDistribution(double x, double u, double o) {
         return 1D / (Math.sqrt(2 * Math.PI) * o) * Math.exp(-(x - u) * (x - u) / 2 / o / o);
 //        return 1/Math.sqrt(2*Math.PI)*Math.exp(-x*x/2);
+    }
+
+    public static boolean in(int a, int b, int c) {
+        return a >= b && a <= c;
     }
 }

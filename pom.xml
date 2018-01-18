@@ -16,6 +16,7 @@
         <module>util</module>
         <module>hands-free</module>
         <module>find-image</module>
+        <module>test-0</module>
     </modules>
     <build>
         <plugins>
