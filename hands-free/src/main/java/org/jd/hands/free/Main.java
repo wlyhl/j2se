@@ -34,6 +34,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
+//        String[] a = {"/D:\\program\\java\\hands-free\\hands-free-min.conf"};
         launch(args);
     }
 }
