@@ -7,18 +7,19 @@ import java.io.OutputStream;
  */
 public class Logger {
     OutputStream out;
-
     public Logger(OutputStream out) {
         this.out = out;
     }
-    public void log(Object... s){
-        try{
-            for(Object ss:s){
+    public void log(Object... s) {
+        try {
+            for (Object ss : s) {
                 out.write(ss.toString().getBytes());
             }
             out.write('\n');
-        }catch (Exception e){
+        } catch (Exception e) {
             ExceptionUtil.thro(e);
         }
     }
+
+    public static Logger l = new Logger(System.out);
 }

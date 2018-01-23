@@ -16,21 +16,21 @@ import java.util.List;
 public class Main extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        List<String> param = super.getParameters().getRaw();
+    public void start(Stage s) throws Exception {
+        List<String> param = getParameters().getRaw();
         VBox root = new VBox(2);
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(10, 10, 10, 10));
         root.getChildren().addAll(CommandButton.loadFrom(FileUtil.find(param.isEmpty() ? "hands-free.conf" : param.get(0))));
         Scene scene = new Scene(root, 200, -1);
 
-        primaryStage.setTitle("呵");
-        primaryStage.getIcons().add(new Image(FileUtil.find("icon.png")));
-        primaryStage.setAlwaysOnTop(true);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        s.setTitle("呵");
+        s.getIcons().add(new Image(FileUtil.find("icon.png")));
+        s.setAlwaysOnTop(true);
+        s.setScene(scene);
+        s.show();
 
-        primaryStage.setX(Robot.screenRectangle.width - primaryStage.getWidth());
+        s.setX(Robot.screenRectangle.width - s.getWidth());
     }
 
     public static void main(String[] args) {

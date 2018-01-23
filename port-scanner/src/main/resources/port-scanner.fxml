@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.*?>
+<VBox spacing="2" alignment="CENTER" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.jd.port.scanner.PortScannerController"
+      style="-fx-fill-height: true">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+    <HBox alignment="BOTTOM_CENTER" >
+        <Text>ip</Text>
+        <TextField fx:id="ip0"/><Text text=" . "/>
+        <TextField fx:id="ip1"/><Text text=" . "/>
+        <TextField fx:id="ip2"/><Text text=" . "/>
+        <TextField fx:id="ip3"/>
+    </HBox>
+    <HBox alignment="CENTER" >
+        <Text>port</Text>
+        <TextField fx:id="port" text="80"/>
+    </HBox>
+    <HBox alignment="CENTER" >
+        <Text>线程数</Text>
+        <TextField fx:id="threadNum" text="20"/>
+    </HBox>
+    <HBox alignment="CENTER" >
+        <Text>连接超时（毫秒）</Text>
+        <TextField fx:id="timeOut" text="2000"/>
+    </HBox>
+    <HBox alignment="CENTER" >
+        <Button onAction="#scan">开始扫描</Button><Text text=" "/>
+        <Button onAction="#stop">结束扫描</Button><Text text=" "/>
+        <Button onAction="#clear">清屏</Button>
+    </HBox>
+    <CheckBox  fx:id="showDetail" text="显示扫描过程"/>
+    <TextArea fx:id="log" style="-fx-fill-width: true;-fx-min-height: 300" />
+</VBox>
