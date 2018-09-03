@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.CheckBox?>
+<VBox spacing="2" alignment="CENTER" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="org.jd.regex.Main"
+      style="-fx-fill-height: true">
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <HBox>
+        <VBox>
+            <Text text="字符串"/>
+            <TextArea fx:id="string"/>
+        </VBox>
+        <VBox>
+            <Text text="正则"/>
+            <TextArea prefHeight="50" fx:id="regex" onKeyPressed="#regPressed" onKeyReleased="#regReleased"/>
+            <CheckBox text=".匹配所有字符" fx:id="dotAll"/>
+            <CheckBox text="积极响应" fx:id="positive"/>
+
+        </VBox>
+    </HBox>
+    <VBox fx:id="result">
+    </VBox>
+
+</VBox>

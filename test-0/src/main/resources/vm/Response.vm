@@ -1,0 +1,27 @@
+package com.gxjf.portals.sdfae.response;
+
+/**
+ * $code $name
+ * Created by cuijiandong on 2018/7/17.
+ */
+public class Api$codeNum {
+#foreach($field in $fields)
+    /**
+#foreach($sdesc in $field.desc.split("\n"))
+     * $sdesc.trim()
+#end
+     */
+    private String $field.name;
+
+#end
+#foreach($field in $fields)
+    public String ${field.getter}() {
+        return $field.name;
+    }
+
+    public void ${field.setter}(String $field.name) {
+        this.$field.name = $field.name;
+    }
+
+#end
+}
