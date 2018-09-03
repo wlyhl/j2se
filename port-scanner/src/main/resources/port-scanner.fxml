@@ -13,10 +13,10 @@
     </padding>
     <HBox alignment="BOTTOM_CENTER" >
         <Text>ip</Text>
-        <TextField fx:id="ip0"/><Text text=" . "/>
-        <TextField fx:id="ip1"/><Text text=" . "/>
-        <TextField fx:id="ip2"/><Text text=" . "/>
-        <TextField fx:id="ip3"/>
+        <TextField fx:id="ip0" onKeyReleased="#ip0KeyReleased"/><Text text=" . "/>
+        <TextField fx:id="ip1" onKeyReleased="#ipKeyReleased"/><Text text=" . "/>
+        <TextField fx:id="ip2" onKeyReleased="#ipKeyReleased"/><Text text=" . "/>
+        <TextField fx:id="ip3" onKeyReleased="#ipKeyReleased"/>
     </HBox>
     <HBox alignment="CENTER" >
         <Text>port</Text>

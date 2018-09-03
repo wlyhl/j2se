@@ -25,4 +25,9 @@ public class ImageUtil {
             ExceptionUtil.thro(e);
         }
     }
+    public static BufferedImage copy(BufferedImage source){
+        BufferedImage img=new BufferedImage(source.getWidth(),source.getHeight(),source.getType());
+        img.setData(source.getData());
+        return img;
+    }
 }

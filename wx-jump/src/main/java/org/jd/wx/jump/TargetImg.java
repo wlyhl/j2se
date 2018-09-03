@@ -1,7 +1,10 @@
 package org.jd.wx.jump;
 
+import org.jd.util.Jmath;
+
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 public class TargetImg {
@@ -23,12 +26,13 @@ public class TargetImg {
         for (Position p : pos) {
             rgb.add(new RGB(img.getRGB(p.x, p.y)).setDevition(devition));
         }
-//		for(int i=0;i<pos.size();i++)
-//			System.out.println(pos.get(i)+"="+rgb.get(i));
     }
 
     public Position foundIn(RGBCache img) {
-        for (int y = 700, xend = img.img.getWidth() - width; y < 1300; y++)
+        for (int y = Jmath.toInt(img.img.getHeight()*0.364),
+             xend = img.img.getWidth() - width,
+                yEnd=Jmath.toInt(img.img.getHeight()*0.677);
+             y < yEnd; y++)
             for (int x = 0; x < xend; x++) {//左上角
                 if (like(img, x, y)) {
                     img.setBackGround(x, y, x + width, y + height);
@@ -46,5 +50,10 @@ public class TargetImg {
                 return false;
         }
         return true;
+    }
+
+    private float findZoom(RGBCache img) {
+        float zoom=1.0f;
+        return zoom;
     }
 }

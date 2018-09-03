@@ -2,10 +2,13 @@ package org.jd.port.scanner;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyEvent;
 import org.jd.util.Assert;
 
 /**
@@ -85,5 +88,43 @@ public class PortScannerController {
 
     public void clear() {
         log.setText("");
+    }
+
+
+    public void ip0KeyReleased(KeyEvent keyEvent) {
+        String[] ip = ip0.getText().split("\\.");
+        if (ip.length > 1) {
+            TextField[] txt = {ip0, ip1, ip2, ip3};
+            for (int i = 0; i < ip.length; i++) {
+                txt[i].setText(ip[i]);
+                txt[i].requestFocus();
+            }
+        } else {
+            ipKeyReleased(keyEvent);
+        }
+    }
+
+    public void ipKeyReleased(KeyEvent keyEvent) {
+        switch (keyEvent.getCode()) {
+            case PERIOD:
+            case DECIMAL:
+            case BACK_SPACE:
+                TextField txt = (TextField) keyEvent.getTarget();
+                TextField[] txts = {ip0, ip1, ip2, ip3};
+                int i = txt.getId().charAt(2) - '0';
+                String s = txt.getText();
+                switch (keyEvent.getCode()) {
+                    case PERIOD:
+                    case DECIMAL:
+                        if (s.length() > 0 && ++i < txts.length) {
+                            txt.setText(s.substring(0,s.length()-1));
+                            txts[i].requestFocus();
+                        }
+                        break;
+                    case BACK_SPACE:
+                        if (s.length() == 0 && --i >= 0)
+                            txts[i].requestFocus();
+                }
+        }
     }
 }

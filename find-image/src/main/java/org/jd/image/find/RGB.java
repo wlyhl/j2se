@@ -37,6 +37,15 @@ public class RGB{
 				&& c.g>=gMin && c.g<=gMax
 				&& c.b>=bMin && c.b<=bMax;
 	}
+
+	/**
+	 * RGB三色差之和
+	 * @param rgb
+	 */
+	public int sumDeviation(int rgb){
+		RGB c=new RGB(rgb);
+		return Math.abs(r-c.r)+Math.abs(g-c.g)+Math.abs(b-c.b);
+	}
 	@Override
 	public String toString() {
 		return "[r=" + r + ", g=" + g + ", b=" + b + "]";

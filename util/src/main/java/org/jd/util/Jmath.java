@@ -34,7 +34,27 @@ public class Jmath {
 //        return 1/Math.sqrt(2*Math.PI)*Math.exp(-x*x/2);
     }
 
-    public static boolean in(int a, int b, int c) {
-        return a >= b && a <= c;
+    /**
+     * return a < b && b < c;
+     */
+    public static boolean isAscending(int a, int b, int c) {
+        return a < b && b < c;
+    }
+
+    public static int toInt(double d) {
+        return Double.valueOf(d).intValue();
+    }
+
+    public static String toHex(long i) {
+        int flag = i < 0 ? -1 : 0;
+        StringBuilder sb = new StringBuilder();
+        for (int n = 0, bit = 1; i != flag || bit != 0; n++, bit = n & 0x7) {
+            if (bit == 0)
+                sb.append(' ');
+            sb.append(0x1 & i);
+            if (i != flag)
+                i >>= 1;
+        }
+        return sb.reverse().toString();
     }
 }

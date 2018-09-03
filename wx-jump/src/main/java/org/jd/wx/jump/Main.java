@@ -39,7 +39,7 @@ public class Main {
 			long l=new Date().getTime();
 			InputStream in = shell.exe("adb shell screencap -p");
 			BufferedImage img = ImageUtil.readFromADB(in);
-			ImageUtil.writeTo(img,f.getAbsolutePath()+"\\"+i+".png");
+//			ImageUtil.writeTo(img,f.getAbsolutePath()+"\\"+i+".png");
 			System.out.println("截屏耗时"+(new Date().getTime()-l));
 
 			double farFrom ;
@@ -61,18 +61,23 @@ public class Main {
 //			shell.exe("adb shell input swipe 100 100 100 100 "+Double.valueOf(delay).intValue()+"");
 			shell.exe(swipe);
 			System.out.println("本次耗时"+(new Date().getTime()-l));
-			x=3000+Math.abs(nd.get(Jmath.randomInt(0,nd.size()-1))*30);
+//			x=3000+Math.abs(nd.get(Jmath.randomInt(0,nd.size()-1))*30);
 			x=4000;
-			System.out.println("延时"+x);
 			Thread.sleep(x);
 		}
 	}
+	static BufferedImage img;
 	static double farFrom(BufferedImage i)throws IOException{
 		long l=new Date().getTime();
 		RGBCache rgb = new RGBCache(i);
 		setBG(rgb);//背景色
-		TargetImg me=new TargetImg(ImageIO.read(Main.class.getClassLoader().getResourceAsStream("me.png")), 2);
+		img=ImageIO.read(Main.class.getClassLoader().getResourceAsStream("me.png"));
+		TargetImg me=new TargetImg(img, 2);
 		Position mePos = me.foundIn(rgb);
+		if(mePos == null){
+			me=new TargetImg(img,10);
+
+		}
 //		ImageUtil.writeTo(rgb,"D:\\jump\\work\\0.png");
 		System.out.println("mePos"+mePos);
 		Position platPos = findPlatform(mePos,rgb,me);
@@ -85,7 +90,9 @@ public class Main {
 		Position top=findPlatformTop(img);
 		System.out.println("PlatformTop"+top);
 		boolean leftJump=mePos.x>top.x;
-		for(int y=top.y,borderX=top.x;y<1200;y++){
+		for(int y=top.y,borderX=top.x,
+			yMax=Jmath.toInt(0.625*img.img.getHeight());
+			y<yMax;y++){
 			int x=top.x;
 			while(img.notBG((x+=leftJump?-1:1), y));
 			if(leftJump?x>=borderX:x<=borderX)
@@ -95,7 +102,11 @@ public class Main {
 		throw new RuntimeException("未找到平台中心坐标");
 	}
 	static Position findPlatformTop(RGBCache img){
-		for(int y=500,xMax=img.img.getWidth();y<1200;y++)
+
+		for(int y = Jmath.toInt(0.26*img.img.getHeight()),
+			xMax = img.img.getWidth(),
+			yMax = Jmath.toInt(0.625*img.img.getHeight());
+			y<yMax; y++)
 			for(int x=0;x<xMax;x++){
 				if(img.notBG(x, y)){
 					int x2=x;

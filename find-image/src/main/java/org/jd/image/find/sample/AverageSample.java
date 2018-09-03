@@ -12,31 +12,37 @@ import java.util.List;
 public class AverageSample implements Sample {
 
     private int n;
+    private int cnt;
+
+    private AverageSample(int n, int cnt) {
+        this.n = n;
+        this.cnt = cnt;
+    }
 
     /**
      * 平均取样
      *
      * @param n 每n个点取一次样
      */
-    public AverageSample(int n) {
-        this.n = n;
+    public static AverageSample per(int n) {
+        return new AverageSample(n,0);
     }
 
     /**
-     *
-     * @param count 大概取样总数，
-     * @param width 图片宽度
-     * @param height 图片高度
+     * @param cnt 大概取样总数
      */
-    public AverageSample(int count, double width, double height) {
-        this((int) Math.round(Math.sqrt(width * height / count)));
+    public static AverageSample count(int cnt) {
+        return new AverageSample(0,cnt);
     }
 
+
     @Override
-    public List<Position> sample(int xMax, int yMax) {
-        List<Position> pos = new ArrayList<>((xMax + 1) * (yMax + 1) / n / n);
-        for (int y = 0; y <= yMax; y += n)
-            for (int x = 0; x <= xMax; x += n)
+    public List<Position> sample(int width, int height) {
+        if (n == 0)
+            n = (int) Math.round(Math.sqrt(width * height / cnt));
+        List<Position> pos = new ArrayList<>(width * height / n / n);
+        for (int y = 0; y < height; y += n)
+            for (int x = 0; x < width; x += n)
                 pos.add(new Position(x, y));
         return pos;
     }

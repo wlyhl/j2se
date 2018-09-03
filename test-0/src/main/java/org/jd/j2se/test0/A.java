@@ -1,6 +1,7 @@
 package org.jd.j2se.test0;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.jd.util.ExceptionUtil;
 import org.jd.util.ImageUtil;
 import org.jd.util.Logger;
@@ -9,30 +10,22 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.sql.Date;
+import java.time.*;
+import java.util.Locale;
 
 /**
  * Created by cuijiandong on 2018/1/17.
  */
 public class A {
-    static Logger l=new Logger(System.out);
-    static org.jd.util.Robot r=new org.jd.util.Robot();
-    public static  void main(String[]a)throws Exception{
-//        Timer t=new Timer();
+    public String a = "aaa";
 
-//        l.log("开始",t.cost());
-//
-//
-//        for(int i=0;i<1000;i++){
-//            r.screencap();
-//            l.log("花费",t.cost());
-//        }
-//        BufferedImage img = ImageIO.read(new File("/C:\\Users\\Public\\Pictures\\Sample Pictures\\Chrysanthemum.jpg"));
-        BufferedImage img=r.screencap();
-        ImageIO.write(img,"png",new File("/d:/img/img/a.png"));
-        ImageIO.write(img,"jpg",new File("/d:/img/img/a.jpg"));
-        ImageIO.write(img,"gif",new File("/d:/img/img/a.gif"));
-        for(int i=1;i<=10;i++)
-            ImageUtil.compressJpeg(img,new FileOutputStream("/d:/img/img/"+i+".jpg"),i/10f);
-
+    public static void main(String[] aaa) {
+//        LocalDate ld6_20 = LocalDate.of(2018, 5, 30);
+//        System.out.println(LocalDate.now().isAfter(ld6_20));
+        String[] split = StringUtils.split("", ";");
+        System.out.print("sss");
     }
+
 }
+

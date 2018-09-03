@@ -23,7 +23,7 @@ public class Command implements CMD {
     public static HashMap<String, ArrayList<Command>> define;
 
     public Command(String conf) {//type tab
-        String[] c = conf.split(" ");
+        String[] c = conf.trim().split(" ");
         cmd = c[0];
         ArrayList<String> param = new ArrayList<>();
         for (int i = 1; i < c.length; i++)
@@ -31,12 +31,37 @@ public class Command implements CMD {
         this.param = param.toArray(new String[c.length - 1]);
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb=new StringBuilder(cmd);
+        for(String p:param)
+            sb.append(" ").append(unescape(p));
+        return sb.toString();
+    }
+
+    /**
+     * 转义配置
+     */
+    String[] escapeConf = {
+            "\\s", " ",
+            "\\\\", "\\"
+    };
+
     /**
      * 转义
      */
     private String escape(String s) {
-        s = s.replace( "\\s", " ");
-        s = s.replace("\\\\", "\\");
+        for (int i = 0; i < escapeConf.length; )
+            s = s.replace(escapeConf[i++], escapeConf[i++]);
+        return s;
+    }
+
+    /**
+     * 逆转义
+     */
+    private String unescape(String s) {
+        for (int i = escapeConf.length; i > 0; )
+            s = s.replace(escapeConf[--i], escapeConf[--i]);
         return s;
     }
 
@@ -58,7 +83,7 @@ public class Command implements CMD {
                 for (String s : p)
                     sb.append(s).append(" ");
                 sb.setLength(sb.length() - 1);
-                Runtime.getRuntime().exec(sb.toString());
+                Robot.exec(sb.toString());
                 break;
             case MOUSE_MOVE:
                 if (p.length == 2) //mouseMove 100 100
@@ -69,7 +94,7 @@ public class Command implements CMD {
                     if (in == null)
                         throw new RuntimeException("加载目标图片失败，未找到目标图片！");
                     BufferedImage img = ImageIO.read(in);
-                    TargetImg targetImg = new TargetImg(img, 15, new AverageSample(30, img.getWidth(), img.getHeight()));
+                    TargetImg targetImg = new TargetImg(img, 15, AverageSample.count(30));
                     Position pos = null;
                     Timer t = new Timer();
                     log.log("在屏幕上搜索目标图片");
@@ -92,7 +117,7 @@ public class Command implements CMD {
                 break;
             case MOUSE_CLICK:
                 r.mouseClick();
-                if (p.length>0)
+                if (p.length > 0)
                     for (int i = Integer.valueOf(p[0]); i > 1; i--)
                         r.mouseClick();
                 break;

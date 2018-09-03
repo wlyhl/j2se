@@ -15,8 +15,12 @@
         <module>port-scanner</module>
         <module>util</module>
         <module>hands-free</module>
+        <module>regex</module>
         <module>find-image</module>
         <module>test-0</module>
+        <module>screen-capture</module>
+        <module>qlcoder</module>
+        <module>httpproxy</module>
     </modules>
     <build>
         <plugins>
