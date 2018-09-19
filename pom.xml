@@ -21,6 +21,7 @@
         <module>screen-capture</module>
         <module>qlcoder</module>
         <module>httpproxy</module>
+        <module>http-proxy-keep-alive</module>
     </modules>
     <build>
         <plugins>
@@ -55,5 +56,11 @@
             <!--</plugin>-->
         </plugins>
     </build>
-
+    <repositories>
+        <!--阿里云仓库-->
+        <repository>
+            <id>aliyun</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
 </project>

@@ -1,7 +1,5 @@
 package org.jd.j2se.test0.udp;
 
-import com.sun.deploy.pings.Pings;
-
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
