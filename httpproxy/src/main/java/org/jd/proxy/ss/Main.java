@@ -15,6 +15,10 @@ import java.nio.channels.SocketChannel;
 public class Main {
     static Logger log = LoggerFactory.getLogger(Main.class);
 
+    /**
+     * 2000 127.0.0.1 2001 r
+     * 2001 r
+     */
     public static void main(String[] a) throws Exception {
         Proxy.enDecryptor = (a.length == 4 || a.length == 2) ? new XOREnDecryptor(a[a.length - 1].getBytes()) : new XOREnDecryptor(new byte[0]);
 

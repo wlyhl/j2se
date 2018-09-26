@@ -15,7 +15,7 @@ public abstract class Proxy extends Thread {
     Logger log = LoggerFactory.getLogger(getClass());
     SocketChannel accept;
     SocketChannel server;
-    public static EnDecryptor enDecryptor;
+    static EnDecryptor enDecryptor;
 
     /**
      * server: 监听 2001 端口，解密密码 abc

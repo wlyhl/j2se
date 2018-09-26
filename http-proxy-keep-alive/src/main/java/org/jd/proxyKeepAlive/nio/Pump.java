@@ -11,10 +11,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Pump extends Thread {
-    static Logger log = LoggerFactory.getLogger(Pump.class);
-    private ByteChannel from, to;
+    private static Logger log = LoggerFactory.getLogger(Pump.class);
+    public final ByteChannel from, to;
     private Function<ByteBuffer, ByteBuffer> processor;
-    private Consumer end;
+    private Consumer<Pump> end;
 
     public Pump(ByteChannel from, ByteChannel to) {
         this.from = from;
@@ -42,19 +42,24 @@ public class Pump extends Thread {
         try {
             ByteBuffer rb = ByteBuffer.allocate(8192);
             ByteBuffer wb = rb;
-            for (int n = from.read(rb); n > 0; rb.clear(), n = from.read(rb)) {
+            int n;
+            do {
+                n = from.read(rb);
+                if (n == 0) {
+                    continue;
+                }
                 rb.flip();
                 if (processor != null)
                     wb = processor.apply(rb);
                 IOUtil.writeFully(to, wb);
-            }
+            } while (n >= 0);
             log.info("管道复制结束");
         } catch (ClosedChannelException e1) {
             log.info("管道被关闭，复制结束");
         } catch (Exception e) {
             log.error("管道复制异常", e);
         } finally {
-            end.accept(null);
+            end.accept(this);
         }
     }
 
