@@ -7,25 +7,27 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.nio.channels.ClosedChannelException;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class Pump extends Thread {
     private static Logger log = LoggerFactory.getLogger(Pump.class);
-    public final ByteChannel from, to;
-    private Function<ByteBuffer, ByteBuffer> processor;
+    private final ByteChannel from, to;
+    private ArrayList<Function<ArrayList<ByteBuffer>, ArrayList<ByteBuffer>>> processors;
     private Consumer<Pump> end;
 
     public Pump(ByteChannel from, ByteChannel to) {
         this.from = from;
         this.to = to;
+        processors = new ArrayList<>(2);
     }
 
     /**
-     * 中间处理器，一般做加解密操作
+     * 中间处理器
      */
-    public Pump setProcessor(Function<ByteBuffer, ByteBuffer> processor) {
-        this.processor = processor;
+    public Pump addProcessor(Function<ArrayList<ByteBuffer>, ArrayList<ByteBuffer>> processor) {
+        processors.add(processor);
         return this;
     }
 
@@ -40,25 +42,18 @@ public class Pump extends Thread {
     @Override
     public void run() {
         try {
-            ByteBuffer rb = ByteBuffer.allocate(8192);
-            ByteBuffer wb = rb;
-            int n;
+            ByteBuffer buffer = ByteBuffer.allocate(8192);
             do {
-                n = from.read(rb);
-                if (n == 0) {
-                    continue;
-                }
-                rb.flip();
-                if (processor != null)
-                    wb = processor.apply(rb);
-                IOUtil.writeFully(to, wb);
-            } while (n >= 0);
-            log.info("管道复制结束");
+                IOUtil.readAtLeast1(from, buffer);
+                buffer.flip();
+                IOUtil.writeFully(to, buffer);
+            } while (from.isOpen());
         } catch (ClosedChannelException e1) {
             log.info("管道被关闭，复制结束");
         } catch (Exception e) {
             log.error("管道复制异常", e);
         } finally {
+            log.info("管道复制结束");
             end.accept(this);
         }
     }

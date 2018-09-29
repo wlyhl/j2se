@@ -1,4 +1,4 @@
-package org.jd.proxyKeepAlive.http;
+package org.jd.proxyKeepAlive.nio;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,12 +9,15 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.function.Consumer;
 
-public class TcpServer extends Thread {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    private final int port;
-    private final Consumer<SocketChannel> consumer;
+/**
+ * Created by cuijiandong on 2018/9/28.
+ */
+public class SocketServer implements Runnable {
+    private Logger log = LoggerFactory.getLogger(SocketServer.class);
+    private int port;
+    private Consumer<SocketChannel> consumer;
 
-    public TcpServer(int port, Consumer<SocketChannel> consumer) {
+    public SocketServer(int port, Consumer<SocketChannel> consumer) {
         this.port = port;
         this.consumer = consumer;
     }
@@ -25,11 +28,15 @@ public class TcpServer extends Thread {
             ServerSocketChannel server = ServerSocketChannel.open();
             server.configureBlocking(true);
             server.bind(new InetSocketAddress(port));
-            log.info("{}已启动,监听端口 {} ", getClass().getSimpleName(), port);
+            int c = 0;
+            log.info("启动监听 {} ", port);
             while (server.isOpen()) {
                 SocketChannel accept = server.accept();
+                log.info("第 {} 个连接", c++, accept);
                 accept.setOption(StandardSocketOptions.TCP_NODELAY, true);
                 consumer.accept(accept);
+                ThreadGroup t = Thread.currentThread().getThreadGroup();
+                log.info("当前线程 active {} / {} ", t.activeCount(), t.activeGroupCount());
             }
         } catch (Exception e) {
             log.error("", e);

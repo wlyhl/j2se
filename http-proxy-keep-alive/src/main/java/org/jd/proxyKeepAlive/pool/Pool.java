@@ -1,7 +1,5 @@
 package org.jd.proxyKeepAlive.pool;
 
-import org.jd.util.Assert;
-
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -17,15 +15,16 @@ public class Pool<T> {
         Pooled<T> i;
         if (pool.isEmpty()) {
             i = factory.newInstance();
-            Assert.isTrue(i.useful, "对象不可用");
             i.pool = this;
-        } else i = pool.removeFirst();
+        } else {
+            i = pool.removeFirst();
+        }
         i.idle = false;
         return i;
     }
 
-    protected synchronized void takeBack(Pooled<T> i) {
-        if (i.idle || !i.useful)
+    synchronized void takeBack(Pooled<T> i) {
+        if (i.idle)
             return;
         i.idle = true;
         pool.addLast(i);

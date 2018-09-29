@@ -29,19 +29,11 @@ public class A {
     public String a = "aaa";
 
     public static void main(String[] aaa) throws IOException {
-//        LocalDate ld6_20 = LocalDate.of(2018, 5, 30);
-//        System.out.println(LocalDate.now().isAfter(ld6_20));
-//        String[] split = StringUtils.split("", ";");
-//        System.out.print("sss");
+        LocalDate ld6_20 = LocalDate.of(2018, 5, 30);
+        System.out.println(LocalDate.now().isAfter(ld6_20));
+        String[] split = StringUtils.split("", ";");
+        System.out.print("sss");
 
-
-        NetworkInterface eth4 = NetworkInterface.getByName("eth4");
-        InetAddress addr = eth4.getInetAddresses().nextElement();
-
-        SocketChannel sc=SocketChannel.open();
-//        sc.bind(new InetSocketAddress(addr,50));
-        sc.connect(new InetSocketAddress("www.baidu.com",80));
-        System.out.print(sc.isConnected());
     }
 
 }

@@ -30,15 +30,45 @@ public class IOUtil {
         }
     }
 
+    public static int readAtLeast1(ByteChannel c, ByteBuffer dst) throws IOException {
+        int n;
+        do {
+            n = dealRW(c, c.read(dst));
+        } while (n == 0);
+        return n;
+    }
+
     public static void readFully(ByteChannel c, ByteBuffer dst) throws IOException {
-        while (dst.hasRemaining() && c.read(dst) >= 0) {
-            sleep(1);
+        while (dst.hasRemaining()) {
+            readAtLeast1(c, dst);
         }
     }
 
-    public static void writeFully(ByteChannel c, ByteBuffer dst) throws IOException {
-        while (dst.hasRemaining() && c.write(dst) >= 0) {
-            sleep(1);
+    public static void writeFully(ByteChannel c, ByteBuffer... dst){
+        try {
+            for (ByteBuffer buffer : dst)
+                while (buffer.hasRemaining()) {
+                    dealRW(c, c.write(buffer));
+                }
+        }catch (IOException e){
+            e.printStackTrace();
+            close(c);
         }
+    }
+
+    /**
+     * 读完或写完一次 如果读/写到的数据为0，sleep 如果为-1 关闭Channel并抛异常
+     *
+     * @param n 读到或写入的字节数
+     * @return 读到的字节数
+     */
+    public static int dealRW(ByteChannel c, int n) throws IOException {
+        if (n == -1) {
+            close(c);
+            throw new IOException("远端连接已关闭");
+        }
+        if (n == 0)
+            sleep(50);
+        return n;
     }
 }
